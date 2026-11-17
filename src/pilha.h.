@@ -3,11 +3,10 @@
 
 #include "estruturas.h"
 
-// Exemplo de estrutura de ação para a pilha de desfazer
+// Estrutura de ação para a pilha de desfazer
 typedef struct {
     int tipoAcao; // 1: Abrir, 2: Atender, 3: Fechar
     int numeroChamado;
-    // Outros dados necessários para reverter a ação
 } AcaoPilha;
 
 typedef struct NoPilha {

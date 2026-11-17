@@ -3,9 +3,9 @@
 
 #include "estruturas.h"
 
-
+// Estrutura de ação para a pilha de desfazer
 typedef struct {
-    int tipoAcao; 
+    int tipoAcao; // 1: Abrir, 2: Atender, 3: Fechar
     int numeroChamado;
 } AcaoPilha;
 

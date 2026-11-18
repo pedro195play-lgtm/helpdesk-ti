@@ -1,66 +1,60 @@
-
+#include <stdio.h>
 #include <stdlib.h>
 #include "fila.h"
 
-int fila_vazia(const Fila *fila) {
-    return fila == NULL || fila->inicio == NULL;
+Fila* criarFila() {
+    Fila* f = (Fila*) malloc(sizeof(Fila));
+    if (f != NULL) {
+        f->inicio = NULL;
+        f->fim = NULL;
+        f->tamanho = 0;
+    }
+    return f;
 }
 
-int enfileirar(Fila *fila, const Chamado *chamado) {
-    if (fila == NULL || chamado == NULL) {
-        return 0;
-    }
+int filaVazia(Fila* f) {
+    if (f == NULL) return 1;
+    return (f->inicio == NULL);
+}
 
-    Chamado *novo = malloc(sizeof(Chamado));
+void enfileirar(Fila* f, Chamado c) {
+    if (f == NULL) return;
+    NoFila* novo = (NoFila*) malloc(sizeof(NoFila));
+    if (novo == NULL) return;
 
-    if (novo == NULL) {
-        return 0;
-    }
+    novo->dado = c;
+    novo->prox = NULL;
 
-    *novo = *chamado;
-    novo->proximo = NULL;
-
-    if (fila_vazia(fila)) {
-        fila->inicio = novo;
+    if (filaVazia(f)) {
+        f->inicio = novo;
     } else {
-        fila->fim->proximo = novo;
+        f->fim->prox = novo;
     }
-
-    fila->fim = novo;
-    return 1;
+    f->fim = novo;
+    f->tamanho++;
 }
 
-int desenfileirar(Fila *fila, Chamado *resultado) {
-    if (fila_vazia(fila) || resultado == NULL) {
-        return 0;
+Chamado desenfileirar(Fila* f) {
+    Chamado vazio = {0, 0, 0, "", ""};
+    if (f == NULL || filaVazia(f)) return vazio;
+
+    NoFila* temp = f->inicio;
+    Chamado c = temp->dado;
+
+    f->inicio = temp->prox;
+    if (f->inicio == NULL) {
+        f->fim = NULL;
     }
+    free(temp);
+    f->tamanho--;
 
-    Chamado *removido = fila->inicio;
-    *resultado = *removido;
-
-    fila->inicio = removido->proximo;
-
-    if (fila->inicio == NULL) {
-        fila->fim = NULL;
-    }
-
-    free(removido);
-    return 1;
+    return c;
 }
 
-void liberar_fila(Fila *fila) {
-    if (fila == NULL) {
-        return;
+void liberarFila(Fila* f) {
+    if (f == NULL) return;
+    while (!filaVazia(f)) {
+        desenfileirar(f);
     }
-
-    Chamado *atual = fila->inicio;
-
-    while (atual != NULL) {
-        Chamado *proximo = atual->proximo;
-        free(atual);
-        atual = proximo;
-    }
-
-    fila->inicio = NULL;
-    fila->fim = NULL;
+    free(f);
 }

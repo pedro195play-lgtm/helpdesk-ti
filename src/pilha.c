@@ -4,19 +4,23 @@
 
 Pilha* criarPilha() {
     Pilha* p = (Pilha*) malloc(sizeof(Pilha));
-    if (p == NULL) {
-        exit(1);
+    if (p != NULL) {
+        p->topo = NULL;
+        p->tamanho = 0;
     }
-    p->topo = NULL;
-    p->tamanho = 0;
     return p;
 }
 
+int pilhaVazia(Pilha* p) {
+    if (p == NULL) return 1;
+    return (p->topo == NULL);
+}
+
 void empilhar(Pilha* p, AcaoPilha acao) {
+    if (p == NULL) return;
     NoPilha* novo = (NoPilha*) malloc(sizeof(NoPilha));
-    if (novo == NULL) {
-        exit(1);
-    }
+    if (novo == NULL) return;
+    
     novo->dado = acao;
     novo->prox = p->topo;
     p->topo = novo;
@@ -24,23 +28,21 @@ void empilhar(Pilha* p, AcaoPilha acao) {
 }
 
 AcaoPilha desempilhar(Pilha* p) {
-    if (pilhaVazia(p)) {
-        printf("Erro: Pilha vazia!\n");
-        exit(1);
-    }
+    AcaoPilha vazio = {0, 0};
+    if (p == NULL || pilhaVazia(p)) return vazio;
+
     NoPilha* temp = p->topo;
     AcaoPilha acao = temp->dado;
+    
     p->topo = temp->prox;
     free(temp);
     p->tamanho--;
+
     return acao;
 }
 
-int pilhaVazia(Pilha* p) {
-    return p->topo == NULL;
-}
-
 void liberarPilha(Pilha* p) {
+    if (p == NULL) return;
     while (!pilhaVazia(p)) {
         desempilhar(p);
     }

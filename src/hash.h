@@ -3,17 +3,15 @@
 
 #include "estruturas.h"
 
-#define TAM_HASH 31 // Tamanho da tabela hash (número primo)
-
 typedef struct NoHash {
     char matricula[20];
     char nome[50];
     char setor[50];
-    struct NoHash* prox; // Tratamento de colisão por encadeamento separado
+    struct NoHash* prox;
 } NoHash;
 
 typedef struct {
-    NoHash* tabela[TAM_HASH];
+    NoHash* Tabela[TAM_HASH];
 } TabelaHash;
 
 TabelaHash* criarTabelaHash();

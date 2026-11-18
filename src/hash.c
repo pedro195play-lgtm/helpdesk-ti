@@ -5,9 +5,10 @@
 
 TabelaHash* criarTabelaHash() {
     TabelaHash* th = (TabelaHash*) malloc(sizeof(TabelaHash));
-    if (th == NULL) exit(1);
-    for (int i = 0; i < TAM_HASH; i++) {
-        th->tabela[i] = NULL;
+    if (th != NULL) {
+        for (int i = 0; i < TAM_HASH; i++) {
+            th->Tabela[i] = NULL;
+        }
     }
     return th;
 }
@@ -21,32 +22,24 @@ int funcaoHash(const char* matricula) {
 }
 
 void inserirUsuario(TabelaHash* th, const char* matricula, const char* nome, const char* setor) {
+    if (th == NULL) return;
     int indice = funcaoHash(matricula);
-    
-    // Verificar se já existe
-    NoHash* atual = th->tabela[indice];
-    while (atual != NULL) {
-        if (strcmp(atual->matricula, matricula) == 0) {
-            strcpy(atual->nome, nome);
-            strcpy(atual->setor, setor);
-            return;
-        }
-        atual = atual->prox;
-    }
-    
-    // Inserir no início da lista (tratamento de colisão por encadeamento)
+
     NoHash* novo = (NoHash*) malloc(sizeof(NoHash));
-    if (novo == NULL) exit(1);
+    if (novo == NULL) return;
+
     strcpy(novo->matricula, matricula);
     strcpy(novo->nome, nome);
     strcpy(novo->setor, setor);
-    novo->prox = th->tabela[indice];
-    th->tabela[indice] = novo;
+    novo->prox = th->Tabela[indice];
+    th->Tabela[indice] = novo;
 }
 
 NoHash* buscarUsuario(TabelaHash* th, const char* matricula) {
+    if (th == NULL) return NULL;
     int indice = funcaoHash(matricula);
-    NoHash* atual = th->tabela[indice];
+
+    NoHash* atual = th->Tabela[indice];
     while (atual != NULL) {
         if (strcmp(atual->matricula, matricula) == 0) {
             return atual;
@@ -57,8 +50,9 @@ NoHash* buscarUsuario(TabelaHash* th, const char* matricula) {
 }
 
 void liberarTabelaHash(TabelaHash* th) {
+    if (th == NULL) return;
     for (int i = 0; i < TAM_HASH; i++) {
-        NoHash* atual = th->tabela[i];
+        NoHash* atual = th->Tabela[i];
         while (atual != NULL) {
             NoHash* temp = atual;
             atual = atual->prox;
